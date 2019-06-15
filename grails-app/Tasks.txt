@@ -1,0 +1,82 @@
+
+Metricas
+Promedio de partidos ganados por Cthulhu contra un mazo particular
+Promedio de turnos del mazo Cthulhu para ganar solo
+Promedio de turnos del mazo Cthulhu para ganar contra un mazo particular
+Promedio de turnos del mazo Cthulhu para perder contra un mazo particular
+Un mazo particular baja el promedio de turnos o lo sube
+    si lo baja es probablemente porque gana (si los pierde tiene que ser muy malo)
+    si lo sube puede ganar o perder
+
+Analizar estos promedios, las curvas y como se cruzan, todos contra 100 corridas al menos de cada uno.
+
+Hacer corrida de prueba de cuando llega la vida de player1 a cero.
+Salvar log de las corridas a archivo para analizarlas.
+
+------PENDINGS-------
+
+Completar el Mazo de Cthulhu.
+
+Para resolver que ocurre cuando una habilidad revela una carta y esta es Cthulhu, si como parte de ella hace lo que se dice o se termina exiliando
+Cthulhu, cambiar en Cthulhu el texto por "si fuese a revelarse, en vez de eso se exilia"
+
+Dividir print de campo de batalla por jugador
+
+Hacer que un jugador pueda jugar tantas criaturas como tierras que cubran su coste (siempre simplificando por ejemplo criaturas 2/2 se pueden bajar si hay dos
+tierras) con 4 tierras máximo se pueden bajar 2 criaturas 2/2
+Hacer que el jugador ataque
+Hacer que haya varias estrategias para el jugador.
+    Que ataque siempre a Cthulhu
+    Que ataque siempre a Criaturas y cuando no haya a Cthulhu
+    Que ataque a criaturas y a Cthulhu
+
+Extender a más de un Jugador: Prioridad Bajo
+
+------- DONE --------
+Diferenciar los steps por jugador.
+
+//La habilidad ActionHorrorAttack tiene una subhabilidad que no tiene carta relacionada, ver como implementar
+esto.
+DONE.
+
+//Las abilities tienen que tener asociada una card para saber a quién pertenecen
+y también para sacar las habilidades del luego cuando la carta que las controla se va del juego.
+DONE
+
+Ir desacoplando del  método resolve de cada carta de criatura el agregado de todas las habilidades al
+stepAbilities ya que el game lo hace solo cuando el hechizo se resuelve.
+DONE
+
+//TODO falta hacer que las habilidades de una criatura se vayan cuando esta deja el campo de batalla
+DONE
+
+OPCION ELEGIDA
+2) Cuando una carta entre en el el juego suscribir su hablilidad para que se chequee en el contexto de juego
+cada vez
+Desventaja:
+a) Cuando una carta deja el juego hay que dessuscribir su habilidad. (Podria ser automático esto)
+b) Cuando una carta nueva entra al juego hay que indicarle que tiene la habilidad estática, ejemplo que tiene que atacar.
+Ventaja: no hay que recorrer todas las cartas del juego cada step para buscar habilidades.
+
+//También sería bueno que todas las habilidades de las cartas se registren solas al momento de que la carta
+//entra al campo de batalla
+NOT DONE BY NOW
+
+
+Improvement
+//También estaría bueno que estas habilidades se guarden en un mapa por tipo y no iterando cada vez una lista
+//para encontrar los tipos del step deseado
+Not Done.
+
+-----DESCARTADAS --------
+
+OPCION DESCARTADA
+Dos alternativas.
+1) Ante cada step recorrer todas las cartas del juego y ver que habilidades se disparan
+Desventaja: hay que recorrer todas las cartas del juego buscando que habilidad triggerea en cada step
+Hay hechizos que tienen habilidades retrasadas y que no son permanentes con lo que igual habría que guardar
+esas habilidades en algún lado.
+Ventaja: si una carta se va del juego su habilidad tambíen.
+
+
+
