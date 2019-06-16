@@ -22,6 +22,7 @@ class CthulhuGame {
     List<Card> battlefield = new ArrayList<>()
     List<Card> exile = new ArrayList<>()
     List<Card> graveyard = new ArrayList<>()
+    List<Card> playerGraveyard = new ArrayList<>()
     List<Action> stack = new ArrayList<>()
     List<Ability> stepsAbilities = new ArrayList<>()
     Boolean cthuluWin = false

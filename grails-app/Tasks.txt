@@ -16,6 +16,7 @@ Salvar log de las corridas a archivo para analizarlas.
 ------PENDINGS-------
 
 Completar el Mazo de Cthulhu.
+Separar los graveyards.
 
 Para resolver que ocurre cuando una habilidad revela una carta y esta es Cthulhu, si como parte de ella hace lo que se dice o se termina exiliando
 Cthulhu, cambiar en Cthulhu el texto por "si fuese a revelarse, en vez de eso se exilia"

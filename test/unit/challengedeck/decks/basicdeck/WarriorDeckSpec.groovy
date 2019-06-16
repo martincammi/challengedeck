@@ -42,9 +42,19 @@ class WarriorDeckSpec extends TestCase {
      * Results: Cthulhu: 92, basicDeck: 8
      * Average Cthulhu wins: 96%
      * Average basicDeck-alwaysAttacking wins: 4%
-     * Average on 1000: 94,5/5.5%
+     * Average on 1000: 94/6%
+     *
+     * Cthulhu Idol included
+     * Results: Cthulhu: 99, basicDeck: 1
+     * Results: Cthulhu: 94, basicDeck: 6
+     * Results: Cthulhu: 98, basicDeck: 2
+     * Results: Cthulhu: 93, basicDeck: 7
+     * Results: Cthulhu: 93, basicDeck: 7
+     * Average Cthulhu wins: 95%
+     * Average basicDeck-alwaysAttacking wins: 5%
+     * Average on 1000: 95/4%
      */
-    void dtestWarriorDeckWins(){
+    void testWarriorDeckWins(){
 
         CthulhuGame game
         Integer cthuluWins = 0
