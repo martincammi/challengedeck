@@ -14,6 +14,6 @@ enum CardSubType {
     CULTIST,
     SHAMAN,
     WARRIOR,
-    BASIC
-
+    BASIC,
+    SHAPESHIFTER
 }

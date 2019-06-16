@@ -27,6 +27,10 @@ class Deck {
         return firstCard
     }
 
+    def add(Card card){
+        cards.add(card)
+    }
+
     def addMany(Integer many, Class cardClass){
 
         many.times {

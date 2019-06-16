@@ -213,18 +213,23 @@ class CthulhuGame {
     void cthulhuAttack(){
         println "---ATTACKING STEP ---"
         //Creatures that can attack
-        List<Creature> creatures = battlefield.findAll { c ->
+        List<Creature> creaturesAttacking = battlefield.findAll { c ->
             c instanceof Creature && isActivePlayer(c.owner) && (!c.hasSummoningSickness || c.abilities*.class.contains(Haste.class))
         }
 
         //Check if effectively the creatures are obliged to attack.
-        creatures = creatures.findAll { c -> c instanceof Creature && c.shouldAttack}
+        creaturesAttacking = creaturesAttacking.findAll { c -> c instanceof Creature && c.shouldAttack}
 
-        creatures.each { creature ->
+        creaturesAttacking.each { creature ->
+            stepsAbilities.each{ a ->
+                if(a.trigger == Trigger.DECLARE_ATTACKERS_EACH){
+                    a.action.newInstance().resolve(this, creature)
+                }
+            }
             println "Attacking creature " + creature.name
         }
 
-        Integer damage = creatures*.power?.sum()?:0
+        Integer damage = creaturesAttacking*.power?.sum()?:0
         println "Total damage: " + damage
         substractPlayerLife(damage)
     }
@@ -343,6 +348,16 @@ class CthulhuGame {
         if(ability){
             stack.add(ability.action.newInstance())
         }
+    }
+
+    Card reveal(){
+
+        Card card = cthulhuDeck.draw()
+        Ability ability = card.abilities.find { a-> a.trigger == Trigger.REVEAL}
+        if(ability){
+            stack.add(ability.action.newInstance())
+        }
+        return card
     }
 
     void leaveTheBattlefield(Permanent permanent){
