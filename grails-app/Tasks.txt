@@ -15,7 +15,7 @@ Salvar log de las corridas a archivo para analizarlas.
 
 ------PENDINGS-------
 
-Completar el Mazo de Cthulhu. Only Preparing the Comming is missing
+Completar el Mazo de Cthulhu. Only Preparing the Comming is missing.
 Separar los graveyards.
 Cambiar "Nyarlathotep, Crawling Chaos" por "Nyarlathotep, The Crawling Chaos"
 Para resolver que ocurre cuando una habilidad revela una carta y esta es Cthulhu, si como parte de ella hace lo que se dice o se termina exiliando

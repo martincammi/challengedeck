@@ -9,7 +9,7 @@ class Haste extends Ability {
 
     Haste(Card card){
         this.trigger = Trigger.DECLARE_ATTACKERS
-        this.action = ActionCanAttack.class
+        this.action = new ActionCanAttack()
         this.card = card
     }
     static constraints = {

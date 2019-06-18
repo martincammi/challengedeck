@@ -9,7 +9,7 @@ class Flying extends Ability {
 
     Flying(Card card){
         this.trigger = Trigger.CAN_BE_BLOCKED
-        this.action = ActionDeny.class
+        this.action = new ActionDeny()
         this.card = card
     }
     static constraints = {

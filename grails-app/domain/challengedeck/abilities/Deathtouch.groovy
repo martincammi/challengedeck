@@ -8,7 +8,7 @@ class Deathtouch extends Ability {
 
     Deathtouch(Card card){
         this.trigger = Trigger.DAMAGE_CREATURE
-        this.action = ActionDestroyCreature.class
+        this.action = new ActionDestroyCreature()
         this.card = card
     }
     static constraints = {

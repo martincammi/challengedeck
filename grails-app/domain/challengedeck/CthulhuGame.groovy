@@ -166,9 +166,11 @@ class CthulhuGame {
             Card card = cthulhuDeck.draw()
             println "Casting card " + card.name
 
-            List abilities = card.abilities.findAll { a-> a.trigger == Trigger.RESOLVE}
+            List abilities = card.abilities
             abilities.each { ability ->
-                stack.add(ability.action.newInstance())
+                if(ability.trigger == Trigger.RESOLVE){
+                    stack.add(ability.action)
+                }
             }
 
             card.resolve(this)
@@ -185,9 +187,13 @@ class CthulhuGame {
             Card card = drawCard(player)
             println "Casting card " + card.name
 
-            List abilities = card.abilities.findAll { a-> a.trigger == Trigger.RESOLVE}
+            List abilities = card.abilities
             abilities.each { ability ->
-                stack.add(ability.action.newInstance())
+                if(ability.trigger == Trigger.RESOLVE){
+                    stack.add(ability.action)
+                }else{
+                    stepsAbilities.add(ability)
+                }
             }
 
             card.resolve(this)
@@ -223,7 +229,7 @@ class CthulhuGame {
         creaturesAttacking.each { creature ->
             stepsAbilities.each{ a ->
                 if(a.trigger == Trigger.DECLARE_ATTACKERS_EACH){
-                    a.action.newInstance().resolve(this, creature)
+                    a.action.resolve(this, creature)
                 }
             }
             println "Attacking creature " + creature.name
@@ -260,6 +266,10 @@ class CthulhuGame {
 
         //Remove all the abilities that have expiration at end of turn
         stepsAbilities.removeAll(stepsAbilities.findAll { a -> isActivePlayer(a.card.owner) && a.expire.equals(Expire.END_OF_TURN) })
+
+//        //For abilities up to the end of next turn change
+        List abilitiesForNextTurn =  stepsAbilities.findAll { a -> isActivePlayer(a.card.owner) && a.expire.equals(Expire.END_OF_NEXT_TURN)}
+        abilitiesForNextTurn.each { it.expire = Expire.END_OF_TURN }
 
         triggersToStack(Trigger.BEGINNING_END_STEP)
         resolveStack()
@@ -315,7 +325,7 @@ class CthulhuGame {
         stepsAbilities.each { a ->
 
             if(card instanceof Creature && a.trigger == Trigger.STATIC_CREATURE_ENTERS_THE_BATTLEFIELD){
-                a.action.newInstance().resolve(this, card)
+                a.action.resolve(this, card)
             }
         }
 
@@ -323,10 +333,10 @@ class CthulhuGame {
         List abilities = card.abilities
         abilities.each { a->
             if(a.trigger == Trigger.ENTER_THE_BATTLEFIELD){
-                stack.add(a.action.newInstance())
+                stack.add(a.action)
             }else{
                 if(a.trigger == Trigger.STATIC_CREATURE_ENTERS_THE_BATTLEFIELD) {
-                    a.action.newInstance().resolve(this)
+                    a.action.resolve(this)
                 }
                 stepsAbilities.add(a)
             }
@@ -338,7 +348,7 @@ class CthulhuGame {
         card.counters.clear()
         Ability ability = card.abilities.find { a-> a.trigger == Trigger.REMOVE_ALL_COUNTERS}
         if(ability){
-            stack.add(ability.action.newInstance())
+            stack.add(ability.action)
         }
     }
 
@@ -346,7 +356,7 @@ class CthulhuGame {
 
         Ability ability = card.abilities.find { a-> a.trigger == Trigger.REVEAL}
         if(ability){
-            stack.add(ability.action.newInstance())
+            stack.add(ability.action)
         }
     }
 
@@ -355,7 +365,7 @@ class CthulhuGame {
         Card card = cthulhuDeck.draw()
         Ability ability = card.abilities.find { a-> a.trigger == Trigger.REVEAL}
         if(ability){
-            stack.add(ability.action.newInstance())
+            stack.add(ability.action)
         }
         return card
     }
@@ -365,7 +375,7 @@ class CthulhuGame {
         //Search for leave the battlefield abilities and add them to the stack.
         Ability ability = permanent.abilities.find { a-> a.trigger == Trigger.LEAVES_THE_BATTLEFIELD }
         if(ability){
-            stack.add(ability.action.newInstance())
+            stack.add(ability.action)
         }
 
         //Leave all the abilities of that card from game
@@ -379,7 +389,7 @@ class CthulhuGame {
         //Static abilities take effect immediately, don't use the stack.
         stepsAbilities.each { a ->
             if(a.trigger == Trigger.STATIC_CREATURE_LEAVES_THE_BATTLEFIELD){
-                a.action.newInstance().resolve(this, permanent)
+                a.action.resolve(this, permanent)
             }
         }
 
@@ -430,8 +440,13 @@ class CthulhuGame {
             if(ability.card == null){
                 print ability.class
             }
+
             if(isActivePlayer(ability.card.owner) && ability.trigger.equals(trigger)){
-                stack.add(ability.action.newInstance())
+                stack.add(ability.action)
+            }
+
+            if(trigger.equals(Trigger.BEGINNING_OF_COMBAT) && ability.trigger.equals(Trigger.BEGINNING_OF_COMBAT_NEXT_TURN)) {
+                ability.trigger = Trigger.BEGINNING_OF_COMBAT
             }
         }
     }

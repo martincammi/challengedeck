@@ -9,7 +9,7 @@ class Menace extends Ability {
 
     Menace(Card card){
         this.trigger = Trigger.CAN_BE_BLOCKED
-        this.action = ActionBlockWithMoreThanOne.class
+        this.action = new ActionBlockWithMoreThanOne()
         this.card = card
     }
     static constraints = {

@@ -34,7 +34,7 @@ class CthulhuDeck extends Deck {
         addMany(1, CthulhuIdol.class)
         addMany(1, NyarlaphotepTheBlackMan.class)
         addMany(1, NyarlathotepCrawlingChaos.class)
-        //addMany(2, PreparingTheComing.class)
+        addMany(2, PreparingTheComing.class)
 
 
         shuffle()

@@ -8,7 +8,7 @@ class Hexproof extends Ability {
 
     Hexproof(Card card){
         this.trigger = Trigger.CAN_BE_TARGET
-        this.action = ActionDeny.class
+        this.action = new ActionDeny()
         this.card = card
     }
     static constraints = {

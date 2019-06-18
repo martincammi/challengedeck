@@ -15,6 +15,7 @@ abstract class Card {
     Map<Counter, Integer> counters
     String owner
     String controller
+    Card exiledBy
 
     Card(){
         this.hasSummoningSickness = true
@@ -23,7 +24,7 @@ abstract class Card {
 
     abstract void resolve(CthulhuGame game)
 
-    public Card(String name, def cardTypes){
+    Card(String name, def cardTypes){
         this.name = name
         this.cardTypes = cardTypes
     }

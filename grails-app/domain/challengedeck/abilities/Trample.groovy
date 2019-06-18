@@ -8,7 +8,7 @@ class Trample extends Ability {
 
     Trample(Card card){
         this.trigger = Trigger.ASSIGN_COMBAT_DAMAGE
-        this.action = ActionDeny.class
+        this.action = new ActionDeny()
         this.card = card
     }
     static constraints = {
