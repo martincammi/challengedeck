@@ -25,7 +25,7 @@ class CthulhuAncientLordSpec extends SingleGame {
         assertEquals(1,game.exile.size())
         assertTrue(game.battlefield.any { c -> c instanceof WanderingReckoner })
         assertTrue(game.exile.any { c -> c instanceof CthulhuAncientLord })
-        assertEquals(10, game.exile.find { c -> c instanceof CthulhuAncientLord }.getCounter(Counter.TIME))
+        assertEquals(9, game.exile.find { c -> c instanceof CthulhuAncientLord }.getCounter(Counter.TIME))
         assertFalse(game.playerWin)
     }
 
