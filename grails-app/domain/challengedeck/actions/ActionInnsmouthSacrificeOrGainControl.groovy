@@ -27,7 +27,7 @@ class ActionInnsmouthSacrificeOrGainControl extends Action {
             Boolean hasFish = game.battlefield.any { p -> p.counters.containsKey(Counter.FISH) }
 
             if(!hasFish){
-                game.sacrifice(game.battlefield.find { p -> p.name.equals(new InnsmouthOffspring().name)})
+                game.sacrifice(ability.card)
             }
         }
 

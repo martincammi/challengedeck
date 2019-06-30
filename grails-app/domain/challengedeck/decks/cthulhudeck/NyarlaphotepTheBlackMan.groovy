@@ -7,7 +7,6 @@ import challengedeck.abilities.Ability
 import challengedeck.actions.ActionHorrorAttackEachPlayerLose1Life
 import challengedeck.actions.ActionHorrorCreaturesLessOneOne
 import challengedeck.actions.ActionHorrorCreaturesPlusOneOne
-import challengedeck.actions.ActionRevealAndCast
 import challengedeck.actions.ActionRevealAndCastLegendaryCreature
 import challengedeck.cards.Creature
 

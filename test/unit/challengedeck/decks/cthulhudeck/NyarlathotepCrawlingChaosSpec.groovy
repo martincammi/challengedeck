@@ -12,7 +12,21 @@ import spock.lang.Specification
  */
 class NyarlathotepCrawlingChaosSpec extends SingleGame {
 
-    void testNyarlathotepCrawlingChaosHorrors() {
+    void testNyarlathotepCrawlingChaosOneHorror() {
+
+        CthulhuGame game = getSingleGame()
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(1, NyarlathotepCrawlingChaos.class)
+        newDeck.addMany(1, MysticCaller.class)
+
+        game.cthulhuDeck = newDeck
+        game.start(1)
+
+        assertEquals(1,game.playerGraveyard.size())
+    }
+
+    void testNyarlathotepCrawlingChaosTwoHorrors() {
 
         CthulhuGame game = getSingleGame()
 
@@ -23,7 +37,7 @@ class NyarlathotepCrawlingChaosSpec extends SingleGame {
         game.cthulhuDeck = newDeck
         game.start(1)
 
-        assertEquals(1,game.playerGraveyard.size())
+        assertEquals(2,game.playerGraveyard.size())
     }
 
     void testNyarlathotepCrawlingChaosHorrors2() {

@@ -1,9 +1,10 @@
-package challengedeck
+package challengedeck.strategies
 
+import challengedeck.CthulhuGame
 import challengedeck.cards.Creature
 import challengedeck.cards.Strategy
 
-class AlwaysAttackStrategy implements Strategy {
+class AlwaysAttackPlayerStrategy implements Strategy {
 
     static constraints = {
     }

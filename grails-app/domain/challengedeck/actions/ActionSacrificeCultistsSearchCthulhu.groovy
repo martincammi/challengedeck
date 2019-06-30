@@ -3,6 +3,7 @@ package challengedeck.actions
 import challengedeck.Action
 import challengedeck.CardSubType
 import challengedeck.CthulhuGame
+import challengedeck.cards.Counter
 import challengedeck.cards.Creature
 import challengedeck.decks.cthulhudeck.CthulhuAncientLord
 
@@ -18,7 +19,7 @@ class ActionSacrificeCultistsSearchCthulhu extends Action {
             Creature cthulu = game.exile.find{ c -> c instanceof CthulhuAncientLord}
             if(cthulu){
                 println "Cthulu enters the battlefield!"
-                game.removeAllCounters(cthulu)
+                game.removeAllCounters(cthulu, Counter.TIME)
             }else{
                 cthulu = game.cthulhuDeck.cards.find{ c -> c instanceof CthulhuAncientLord}
                 if(cthulu){

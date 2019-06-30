@@ -11,7 +11,7 @@ class ActionReturnFirstCardGraveyardToBattlefield extends Action{
         if(!game.graveyard.isEmpty()){
             Card firstGraveyardCard = game.graveyard.first()
             game.graveyard.removeAt(0)
-            println "Retrieving " + firstGraveyardCard.name + " from graveyard"
+            println ability.card.name + ": Retrieving " + firstGraveyardCard.name + " from graveyard"
             if(firstGraveyardCard instanceof Creature){
                 game.putOnBattlefield(firstGraveyardCard)
             }else{

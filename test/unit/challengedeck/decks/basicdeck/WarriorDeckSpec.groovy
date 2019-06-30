@@ -2,6 +2,7 @@ package challengedeck.decks.basicdeck
 
 import challengedeck.CthulhuGame
 import challengedeck.Deck
+import challengedeck.cards.Mountain
 import challengedeck.decks.cthulhudeck.MysticCaller
 import challengedeck.decks.cthulhudeck.WanderingReckoner
 import junit.framework.TestCase
@@ -23,6 +24,106 @@ class WarriorDeckSpec extends TestCase {
         game.start(1)
 
         assertEquals(20,game.playerLife)
+    }
+
+    void testWarriorDeckOneMountain() {
+
+        CthulhuGame game = new CthulhuGame()
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(2, Mountain.class)
+        newDeck.addMany(5, RedWarrior.class)
+
+        newDeck.addMany(1, RedWarrior.class)
+
+        game.player.deck = newDeck
+        game.start(1)
+
+        assertEquals(1, game.battlefield.count { it instanceof Mountain})
+        assertTrue(game.battlefield.any { it instanceof Mountain})
+    }
+
+    void testWarriorDeckTwoMountainsOneWarrior() {
+
+        CthulhuGame game = new CthulhuGame()
+
+        Deck newDeckCthulhu = new Deck();
+        newDeckCthulhu.addMany(10, WanderingReckoner.class)
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(2, Mountain.class)
+        newDeck.addMany(5, RedWarrior.class)
+
+        newDeck.addMany(2, RedWarrior.class)
+
+        game.player.deck = newDeck
+        game.cthulhuDeck = newDeckCthulhu
+        game.start(2)
+
+        assertEquals(2, game.battlefield.count { it instanceof Mountain})
+        assertEquals(1, game.battlefield.count { it instanceof RedWarrior})
+    }
+
+    void testWarriorDeckTwoMountainsTwoWarriors() {
+
+        CthulhuGame game = new CthulhuGame()
+
+        Deck newDeckCthulhu = new Deck();
+        newDeckCthulhu.addMany(10, WanderingReckoner.class)
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(2, Mountain.class)
+        newDeck.addMany(5, RedWarrior.class)
+
+        newDeck.addMany(3, RedWarrior.class)
+
+        game.player.deck = newDeck
+        game.cthulhuDeck = newDeckCthulhu
+        game.start(3)
+
+        assertEquals(2, game.battlefield.count { it instanceof Mountain})
+        assertEquals(2, game.battlefield.count { it instanceof RedWarrior})
+    }
+
+    void testWarriorDeckThreeMountainsTwoWarriors() {
+
+        CthulhuGame game = new CthulhuGame()
+
+        Deck newDeckCthulhu = new Deck();
+        newDeckCthulhu.addMany(10, WanderingReckoner.class)
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(3, Mountain.class)
+        newDeck.addMany(4, RedWarrior.class)
+        newDeck.addMany(3, RedWarrior.class)
+
+        game.player.deck = newDeck
+        game.cthulhuDeck = newDeckCthulhu
+        game.start(3)
+
+        assertEquals(3, game.battlefield.count { it instanceof Mountain})
+        assertEquals(2, game.battlefield.count { it instanceof RedWarrior})
+    }
+
+    void testWarriorDeckFourMountainsFourWarriors() {
+
+        CthulhuGame game = new CthulhuGame()
+
+        Deck newDeckCthulhu = new Deck();
+        newDeckCthulhu.addMany(10, WanderingReckoner.class)
+
+        Deck newDeck = new Deck();
+        newDeck.addMany(4, Mountain.class)
+        newDeck.addMany(3, RedWarrior.class)
+
+        newDeck.addMany(10, RedWarrior.class)
+
+        game.player.deck = newDeck
+        game.cthulhuDeck = newDeckCthulhu
+        game.start(4)
+
+        assertEquals(4, game.battlefield.count { it instanceof Mountain})
+        assertEquals(4, game.battlefield.count { it instanceof RedWarrior})
     }
 
     /**
@@ -83,13 +184,17 @@ class WarriorDeckSpec extends TestCase {
      * Average Cthulhu wins: 96%
      * Average basicDeck-alwaysAttacking wins:% 4
      * Average on 1000: 97/3%
+     *
+     * Improved Simple deck to cast as much as possible on each turn
+     * Average on 100: 86/14%
+     * Average on 1000: 84/16%
      */
-    void dtestWarriorDeckWins(){
+    void testWarriorDeckWins(){
 
         CthulhuGame game
         Integer cthuluWins = 0
         Integer warriorDeckWins = 0
-        int games = 1000
+        int games = 100
         for (int i =0; i < games; i++){
             game = new CthulhuGame()
             game.start()

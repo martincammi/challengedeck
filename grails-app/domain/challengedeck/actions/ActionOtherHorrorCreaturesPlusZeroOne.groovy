@@ -12,7 +12,7 @@ class ActionOtherHorrorCreaturesPlusZeroOne extends Action {
     void resolve(CthulhuGame game){
         game.battlefield.each { c ->
 
-            if(c instanceof Creature && c.cardSubTypes.contains(CardSubType.HORROR) && !c instanceof YogSothothTheOmniscient){
+            if(c instanceof Creature && c.cardSubTypes.contains(CardSubType.HORROR) && !(c instanceof YogSothothTheOmniscient)){
                 resolve(game, c)
             }
 

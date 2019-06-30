@@ -15,6 +15,7 @@ Salvar log de las corridas a archivo para analizarlas.
 
 ------PENDINGS-------
 
+Codear Cthulhu
 Completar el Mazo de Cthulhu. Only Preparing the Comming is missing.
 Separar los graveyards.
 Cambiar "Nyarlathotep, Crawling Chaos" por "Nyarlathotep, The Crawling Chaos"

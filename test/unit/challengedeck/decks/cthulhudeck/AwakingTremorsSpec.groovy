@@ -35,11 +35,11 @@ class AwakingTremorsSpec extends SingleGame {
         newDeck.addMany(1, AwakingTremors.class)
         newDeck.addMany(1, WanderingReckoner.class)
 
-        newDeck.addMany(1, WanderingReckoner.class)
+        newDeck.addMany(2, WanderingReckoner.class)
 
         game.cthulhuDeck = newDeck
         game.start(2)
 
-        assertEquals(1, game.getAllCreatures().size())
+        assertEquals(2, game.getAllCreatures().size())
     }
 }

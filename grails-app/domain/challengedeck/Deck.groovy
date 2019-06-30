@@ -37,4 +37,11 @@ class Deck {
             cards.add(cardClass.newInstance())
         }
     }
+
+    Card look(Integer position){
+        if(position >= 0 && position < cards.size()){
+            return cards.get(position)
+        }
+        return null
+    }
 }

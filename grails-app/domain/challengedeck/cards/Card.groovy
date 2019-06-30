@@ -16,6 +16,7 @@ abstract class Card {
     String owner
     String controller
     Card exiledBy
+    Integer cost = 0
 
     Card(){
         this.hasSummoningSickness = true
@@ -50,5 +51,41 @@ abstract class Card {
 
     boolean hasCounter(Counter counter){
         return counters.containsKey(counter)
+    }
+
+    Integer getCounter(Counter counter){
+        if(counters.get(counter) == null){
+            return 0
+        }else{
+            return counters.get(counter)
+        }
+    }
+
+    void addCounter(Counter counter){
+        if(getCounter(counter) == null){
+            counters.put(counter, 0)
+        }else{
+            counters.put(counter, getCounter(counter) + 1)
+        }
+    }
+
+    void removeCounter(Counter counter){
+        if(getCounter(counter) != null && getCounter(counter) > 0){
+            counters.put(counter, getCounter(counter) - 1)
+        }
+    }
+
+    void setCounter(Counter counter, Integer amount){
+        if(amount > 0){
+            amount.times { addCounter(counter) }
+        }
+
+        if(amount == 0){
+            counters.put(counter, 0)
+        }
+    }
+
+    void removeAllCounters(Counter counter){
+        setCounter(counter, 0)
     }
 }

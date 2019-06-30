@@ -34,7 +34,7 @@ class Creature extends Card implements Permanent {
     @Override
     void resolve(CthulhuGame game) {
         game.putOnBattlefield(this)
-        game.resolveStack()
+//        game.resolveStack()
     }
 
     static constraints = {

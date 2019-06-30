@@ -16,7 +16,7 @@ class WanderingReckonerSpec extends SingleGame {
         CthulhuGame game = getSingleGame()
 
         Deck newDeck = new Deck();
-        newDeck.addMany(1, WanderingReckoner.class)
+        newDeck.addMany(2, WanderingReckoner.class)
 
         game.cthulhuDeck = newDeck
         game.start()

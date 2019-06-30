@@ -3,18 +3,18 @@ package challengedeck
 import challengedeck.abilities.Ability
 import challengedeck.abilities.Expire
 import challengedeck.abilities.Haste
-import challengedeck.cards.Card
-import challengedeck.cards.Creature
-import challengedeck.cards.Permanent
-import challengedeck.cards.Player
-import challengedeck.cards.Sorcery
+import challengedeck.cards.*
 import challengedeck.decks.basicdeck.WarriorDeck
 import challengedeck.decks.cthulhudeck.CthulhuDeck
+import challengedeck.exceptions.CantLeaveBattlefieldException
 import challengedeck.exceptions.CthuluLostGameException
 import challengedeck.exceptions.NoCardsInLibraryException
 import challengedeck.exceptions.PlayerLostGameException
 
 class CthulhuGame {
+
+    public static String EXILE = "EXILE"
+    public static String REVEALED = "REVEALED"
 
     Integer playerLife //playerLife will be always shared
     Deck cthulhuDeck
@@ -23,6 +23,7 @@ class CthulhuGame {
     List<Card> exile = new ArrayList<>()
     List<Card> graveyard = new ArrayList<>()
     List<Card> playerGraveyard = new ArrayList<>()
+    List<Card> revealed = new ArrayList<>()
     List<Action> stack = new ArrayList<>()
     List<Ability> stepsAbilities = new ArrayList<>()
     Boolean cthuluWin = false
@@ -31,6 +32,7 @@ class CthulhuGame {
     Integer playerTurn = 1
     String activePlayer
     Boolean single = false //For testing purposes for Cthulhu to play alone
+
 
 
     static CthulhuGame getSingleGameInstance(){
@@ -107,8 +109,12 @@ class CthulhuGame {
                 }
 
             }catch(NoCardsInLibraryException e){
-                if(!battlefield.find{ c -> c.cardSubTypes.contains(CardSubType.OCTOPUS)}){
-                    playerWin = true
+                if(cthulhuDeck.size() == 0){
+                    if(!battlefield.find{ c -> c.cardSubTypes.contains(CardSubType.OCTOPUS)}){
+                        playerWin = true
+                    }
+                }else{
+                    cthuluWin = true
                 }
             }catch(PlayerLostGameException e){
                 println "Player with " + playerLife + " life"
@@ -132,6 +138,7 @@ class CthulhuGame {
         //Creatures from last turn lose summonsickness
         battlefield.findAll { c -> c instanceof Creature && isActivePlayer(c.owner)}.each{  c -> c.hasSummoningSickness = false }
         triggersToStack(Trigger.BEGINNING_UPKEEP)
+        triggersToStack(Trigger.CHECK_SUSPEND)
         resolveStack()
     }
 
@@ -160,44 +167,97 @@ class CthulhuGame {
     }
 
     void cthulhuCast(Integer many){
+
         println "---CAST STEP ---"
         checkCthulhu()
-        for (int i = 1; i <= many; i++) {
-            Card card = cthulhuDeck.draw()
-            println "Casting card " + card.name
-
-            List abilities = card.abilities
-            abilities.each { ability ->
-                if(ability.trigger == Trigger.RESOLVE){
-                    stack.add(ability.action)
-                }
-            }
-
-            card.resolve(this)
-            if(card instanceof Sorcery){
-                graveyard.add(card)
-            }
-//        println "Casted card " + card
+        Card card
+        for (int i = 0; i < many; i++) {
+            card = cthulhuDeck.draw()
+            reveal(card)
+            revealed.add(card)
         }
+        resolveStack()
+
+        def revealedClone = revealed.clone()
+        for(Card revealedCard: revealedClone){
+            revealed.remove(revealedCard)
+            castCard(revealedCard)
+        }
+        resolveStack()
+        // --
+
+//        println "---CAST STEP ---"
+//        List lookedCards = new ArrayList()
+//        checkCthulhu()
+//        Card card
+//        for (int i = 0; i < many; i++) {
+//            card = cthulhuDeck.look(i)
+//            if(card){
+//                reveal(card)
+//            }
+//            lookedCards.add(card)
+//        }
+//        resolveStack()
+//
+//        for(Card lookedCard: lookedCards){
+//
+//            //The library got empty, try to draw a card nevertheless
+//            if(!lookedCard){
+//                card = cthulhuDeck.draw()
+//            }
+//            //The card is still on the library after reveal, cast it
+//            else if(cthulhuDeck.cards.contains(lookedCard)){
+//                card = cthulhuDeck.draw()
+//                castCard(card)
+//            //The card was removed from library on reveal (possibly Cthulhu) Do not draw it
+//            }else{
+//                //Skip draw (would be drawn, but change zone instead)
+//            }
+//        }
+
     }
 
     void playerCast(Integer many){
         println "---CAST STEP ---"
         for (int i = 1; i <= many; i++) {
+            //Draw
             Card card = drawCard(player)
-            println "Casting card " + card.name
+            println "Drawing card " + card.name
+            player.hand.add(card)
 
-            List abilities = card.abilities
-            abilities.each { ability ->
-                if(ability.trigger == Trigger.RESOLVE){
-                    stack.add(ability.action)
-                }else{
-                    stepsAbilities.add(ability)
-                }
+            //Cast
+            Land land = player.hand.find { it instanceof Land }
+            if(land){
+                println "Playing " + land.name
+                putOnBattlefield(land)
+                player.hand.remove(land)
             }
 
-            card.resolve(this)
-//        println "Casted card " + card
+            Integer amountOfLands = battlefield.count { isActivePlayer(it.owner) && it instanceof Land }
+
+            for(Card aCard: player.hand){
+                if(aCard.cost <= amountOfLands && !(aCard instanceof Land)){
+                   castCard(card)
+                   amountOfLands -= aCard.cost
+                    resolveStack()
+                }
+            }
+        }
+    }
+
+
+    private void castCard(Card card){
+        println "Casting card " + card.name
+        List abilities = card.abilities
+        abilities.each { ability ->
+            if(ability.trigger == Trigger.RESOLVE){
+                stack.add(ability.action)
+            }
+        }
+
+        card.resolve(this)
+        if(card instanceof Sorcery){
+            graveyard.add(card)
         }
     }
 
@@ -324,8 +384,11 @@ class CthulhuGame {
         //Static abilities take effect immediately, don't use the stack.
         stepsAbilities.each { a ->
 
-            if(card instanceof Creature && a.trigger == Trigger.STATIC_CREATURE_ENTERS_THE_BATTLEFIELD){
-                a.action.resolve(this, card)
+            if(card instanceof Creature){
+                if(a.trigger == Trigger.STATIC_CREATURE_ENTERS_THE_BATTLEFIELD ||
+                   a.trigger == Trigger.EXILE_STATIC_CREATURE_ENTERS_THE_BATTLEFIELD ){
+                    a.action.resolve(this, card)
+                }
             }
         }
 
@@ -343,13 +406,32 @@ class CthulhuGame {
         }
     }
 
-    void removeAllCounters(Card card){
+    void moveTo(String zoneFrom, String zoneTo, Card card){
+        removeFromZone(zoneFrom, card)
+        addToZone(zoneTo, card)
+    }
 
-        card.counters.clear()
-        Ability ability = card.abilities.find { a-> a.trigger == Trigger.REMOVE_ALL_COUNTERS}
-        if(ability){
-            stack.add(ability.action)
+    void removeFromZone(String zone, Card card){
+        if(zone.equals(REVEALED)){
+            revealed.remove(card)
         }
+    }
+
+    void addToZone(String zone, Card card){
+        if(zone.equals(EXILE)){
+            exile.add(card)
+            stepsAbilities.addAll(card.abilities.findAll { it.trigger.toString().startsWith("EXILE")})
+        }
+    }
+
+    void removeAllCounters(Card card, Counter counter){
+        card.removeAllCounters(counter)
+        triggersToStack(Trigger.CHECK_SUSPEND)
+    }
+
+    void removeCounter(Card card, Counter counter){
+        card.removeCounter(counter)
+        triggersToStack(Trigger.CHECK_SUSPEND)
     }
 
     void reveal(Card card){
@@ -372,28 +454,40 @@ class CthulhuGame {
 
     void leaveTheBattlefield(Permanent permanent){
 
-        //Search for leave the battlefield abilities and add them to the stack.
-        Ability ability = permanent.abilities.find { a-> a.trigger == Trigger.LEAVES_THE_BATTLEFIELD }
-        if(ability){
-            stack.add(ability.action)
-        }
-
-        //Leave all the abilities of that card from game
-        stepsAbilities.removeAll { a -> a.card.equals(permanent) }
-
-        //Leave the battlefield
-        battlefield.remove(permanent)
-        if(permanent instanceof Creature) { permanent.reset() }
-        graveyard.add(permanent)
-
-        //Static abilities take effect immediately, don't use the stack.
-        stepsAbilities.each { a ->
-            if(a.trigger == Trigger.STATIC_CREATURE_LEAVES_THE_BATTLEFIELD){
-                a.action.resolve(this, permanent)
+        try{
+            //Ability that would replace a leave the battlefield ability
+            stepsAbilities.each { a ->
+                if(a.trigger == Trigger.WOULD_LEAVE_THE_BATTLEFIELD){
+                    a.action.resolve(this, permanent)
+                }
             }
-        }
 
-        println "Card leaving the battlefield " + permanent.name
+            //Search for leave the battlefield abilities and add them to the stack.
+            Ability ability = permanent.abilities.find { a-> a.trigger == Trigger.LEAVES_THE_BATTLEFIELD }
+            if(ability){
+                stack.add(ability.action)
+            }
+
+            //Leave all the abilities of that card from game
+            stepsAbilities.removeAll { a -> a.card.equals(permanent) }
+
+            //Leave the battlefield
+            battlefield.remove(permanent)
+            if(permanent instanceof Creature) { permanent.reset() }
+            graveyard.add(permanent)
+
+            //Static abilities take effect immediately, don't use the stack.
+            stepsAbilities.each { a ->
+                if(a.trigger == Trigger.STATIC_CREATURE_LEAVES_THE_BATTLEFIELD){
+                    a.action.resolve(this, permanent)
+                }
+            }
+
+            println "Card leaving the battlefield " + permanent.name
+
+        }catch(CantLeaveBattlefieldException e){
+            println e.getMessage()
+        }
     }
 
     void sacrifice(Permanent permanent){
