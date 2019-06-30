@@ -138,6 +138,7 @@ class CthulhuGame {
         //Creatures from last turn lose summonsickness
         battlefield.findAll { c -> c instanceof Creature && isActivePlayer(c.owner)}.each{  c -> c.hasSummoningSickness = false }
         triggersToStack(Trigger.BEGINNING_UPKEEP)
+        triggersToStack(Trigger.EXILE_BEGINNING_UPKEEP)
         triggersToStack(Trigger.CHECK_SUSPEND)
         resolveStack()
     }

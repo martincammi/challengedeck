@@ -152,7 +152,27 @@ class CthulhuAncientLordSpec extends SingleGame {
         assertEquals(3,game.battlefield.size())
         assertEquals(1,game.exile.size())
         assertTrue(game.battlefield.any { c -> c instanceof WanderingReckoner })
-        assertEquals(7, game.exile.find { c -> c instanceof CthulhuAncientLord }.getCounter(Counter.TIME))
+        assertEquals(6, game.exile.find { c -> c instanceof CthulhuAncientLord }.getCounter(Counter.TIME))
+        assertFalse(game.playerWin)
+    }
+
+    void testCthulhuAncientLordRemoveCounterUpkeep() {
+
+        CthulhuGame game = getSingleGame()
+
+        Deck newDeck = new Deck()
+        newDeck.addMany(1, CthulhuAncientLord.class)
+        newDeck.addMany(1, MysticCaller.class)
+
+        newDeck.addMany(2, MysticCaller.class)
+
+        game.cthulhuDeck = newDeck
+        game.start(2)
+
+        assertEquals(3,game.battlefield.size())
+        assertEquals(1,game.exile.size())
+        assertTrue(game.battlefield.any { c -> c instanceof MysticCaller })
+        assertEquals(9, game.exile.find { c -> c instanceof CthulhuAncientLord }.getCounter(Counter.TIME))
         assertFalse(game.playerWin)
     }
 }

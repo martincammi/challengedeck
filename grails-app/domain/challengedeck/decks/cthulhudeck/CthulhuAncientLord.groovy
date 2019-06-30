@@ -8,6 +8,7 @@ import challengedeck.abilities.Ability
 import challengedeck.abilities.Deathtouch
 import challengedeck.abilities.Flying
 import challengedeck.abilities.Trample
+import challengedeck.actions.ActionRemoveTimeCounter
 import challengedeck.actions.ActionDenyIfAnyHorrorCreature
 import challengedeck.actions.ActionRemoveCounterFromCthulhu
 import challengedeck.actions.ActionReturnToBattlefieldIfZeroCounters
@@ -27,7 +28,8 @@ class CthulhuAncientLord extends Creature {
                           new Ability(Trigger.REVEAL, ActionSuspendItWithXMinusHorrorTimeCounters.class, this),
                           new Ability(Trigger.EXILE_STATIC_CREATURE_ENTERS_THE_BATTLEFIELD, ActionRemoveCounterFromCthulhu.class, this),
                           new Ability(Trigger.WOULD_LEAVE_THE_BATTLEFIELD, ActionDenyIfAnyHorrorCreature.class, this),
-                          new Ability(Trigger.CHECK_SUSPEND, ActionReturnToBattlefieldIfZeroCounters.class, this)
+                          new Ability(Trigger.CHECK_SUSPEND, ActionReturnToBattlefieldIfZeroCounters.class, this),
+                          new Ability(Trigger.EXILE_BEGINNING_UPKEEP, ActionRemoveTimeCounter.class, this)
         ]
         this.power = 13
         this.toughness = 13
