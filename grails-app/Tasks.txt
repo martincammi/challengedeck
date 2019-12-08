@@ -1,4 +1,11 @@
 
+HOW TO COMMIT
+Commit via IDEA normally.
+Go to the project directory and execute ./pushCode.sh
+
+
+----------------------------------
+
 Metricas
 Promedio de partidos ganados por Cthulhu contra un mazo particular
 Promedio de turnos del mazo Cthulhu para ganar solo
