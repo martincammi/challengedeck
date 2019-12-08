@@ -13,19 +13,63 @@ Analizar estos promedios, las curvas y como se cruzan, todos contra 100 corridas
 Hacer corrida de prueba de cuando llega la vida de player1 a cero.
 Salvar log de las corridas a archivo para analizarlas.
 
+------CAMBIOS-------
+
+--------------------
+Preparing the Coming
+Original text:
+Exile all Horror creatures.
+At the beginning of combat on the next turn return to the battlefield all Horror creatures exiled this way.
+
+New text:
+Exile all Horror creatures.
+At the beginning of the end step on the next turn return to the battlefield all Horror creatures exiled this way, then put a +1/+1 counter on each Horror creature.
+--------------------
+Lurking Fear
+Original text:
+Menace
+Evict Evil - When Lurking Fear leaves the battlefield, each player gains 3 life.
+3/1
+
+New text:
+Menace, first strike
+Evict Evil - When Lurking Fear leaves the battlefield, each player gains 3 life.
+3/2
+
+--------------------
+Nyarlaphotep, the Black Man
+Original text:
+1/1
+
+New text:
+1/3
+--------------------
+Yog-Sothoth, The Omniscient
+Original text:
+Other horror creatures get +0/+1
+
+New text:
+Other Horror creatures get +0/+1
+
+
+
 ------PENDINGS-------
 
-Codear Cthulhu
-Completar el Mazo de Cthulhu. Only Preparing the Comming is missing.
+Armar guia de testeo o juego
+
+
+Adaptar las cartas Lurking Fear, Nyarlaphotep, the Black Man, Yog-Sothoth, The Omniscient y Preparing the Coming con los últimos cambios
+
+
 Separar los graveyards.
 Cambiar "Nyarlathotep, Crawling Chaos" por "Nyarlathotep, The Crawling Chaos"
 Para resolver que ocurre cuando una habilidad revela una carta y esta es Cthulhu, si como parte de ella hace lo que se dice o se termina exiliando
 Cthulhu, cambiar en Cthulhu el texto por "si fuese a revelarse, en vez de eso se exilia"
 
-Dividir print de campo de batalla por jugador
+Dividir print de campo de batalla por jugador.
 
-Hacer que un jugador pueda jugar tantas criaturas como tierras que cubran su coste (siempre simplificando por ejemplo criaturas 2/2 se pueden bajar si hay dos
-tierras) con 4 tierras máximo se pueden bajar 2 criaturas 2/2
+Hacer que un jugador pueda jugar tantas criaturas como tierras que cubran su coste (siempre simplificando por ejemplo criaturas 2/2 se
+pueden bajar si hay dos tierras) con 4 tierras máximo se pueden bajar 2 criaturas 2/2
 Hacer que el jugador ataque
 Hacer que haya varias estrategias para el jugador.
     Que ataque siempre a Cthulhu
@@ -35,6 +79,8 @@ Hacer que haya varias estrategias para el jugador.
 Extender a más de un Jugador: Prioridad Bajo
 
 ------- DONE --------
+Completar el Mazo de Cthulhu. Only Preparing the Comming is missing.
+Codear Cthulhu
 Diferenciar los steps por jugador.
 
 //La habilidad ActionHorrorAttack tiene una subhabilidad que no tiene carta relacionada, ver como implementar

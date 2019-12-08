@@ -1,0 +1,5 @@
+
+
+CthulhuGame
+Has a default of a BasicPlayer, and the basicPlayer comes with a WarriorDeck (monored with only Mountain lands and 2/2 Warrior creatures)
+Has a default of 20 lives for the player.

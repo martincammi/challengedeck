@@ -16,7 +16,7 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeck = new Deck();
+        Deck newDeck = new Deck()
         newDeck.addMany(1, MysticCaller.class)
         newDeck.addMany(1, WanderingReckoner.class)
 
@@ -188,6 +188,10 @@ class WarriorDeckSpec extends TestCase {
      * Improved Simple deck to cast as much as possible on each turn
      * Average on 100: 86/14%
      * Average on 1000: 84/16%
+     *
+     * Added Cthulhu
+     * Average on 100: 89/11%
+     * Average on 1000: 88/12%
      */
     void testWarriorDeckWins(){
 
