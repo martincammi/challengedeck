@@ -13,7 +13,7 @@ class RedWarrior extends Creature {
         this.abilities = []
         this.power = 2
         this.toughness = 2
-        this.owner = "Basic Deck"
+//        this.owner = "Basic Deck"
         this.cost = 2
     }
 

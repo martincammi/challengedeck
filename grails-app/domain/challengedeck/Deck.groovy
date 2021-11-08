@@ -17,6 +17,10 @@ class Deck {
         this.cards = cards
     }
 
+    void clear(){
+        cards = new ArrayList<>()
+    }
+
     def draw(){
         if(cards.isEmpty()){
            throw new NoCardsInLibraryException()
@@ -33,8 +37,13 @@ class Deck {
 
     def addMany(Integer many, Class cardClass){
 
+        Card card
         many.times {
-            cards.add(cardClass.newInstance())
+            card = cardClass.newInstance()
+            if(!card.owner){ //Owner will indicate the deck to which the card belongs, usually a card has no owner before adding it to a deck, an exception of this are Cthulhu cards, this is the why of this if.
+                card.owner = this.name
+            }
+            cards.add(card)
         }
     }
 

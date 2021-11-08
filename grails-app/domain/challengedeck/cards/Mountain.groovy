@@ -11,7 +11,7 @@ class Mountain extends Land {
         this.cardTypes = [CardType.LAND]
         this.cardSubTypes = [CardSubType.BASIC]
         this.abilities = []
-        this.owner = "Basic Deck"
+//        this.owner = "Basic Deck"
     }
 
     @Override

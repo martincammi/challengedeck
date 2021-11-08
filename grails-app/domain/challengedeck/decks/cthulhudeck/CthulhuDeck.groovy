@@ -9,9 +9,11 @@ import challengedeck.decks.cthulhudeck.WanderingReckoner
 
 class CthulhuDeck extends Deck {
 
+    final static String deckName = "Nightmare dreams"
+
     CthulhuDeck(){
 
-        this.name = "Nightmare dreams"
+        this.name = deckName
         addMany(6, NightLurker.class)
         addMany(5, WanderingReckoner.class)
         addMany(2, TheMadnessFromTheSea.class)

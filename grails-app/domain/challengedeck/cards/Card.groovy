@@ -7,13 +7,13 @@ import challengedeck.abilities.Ability
 
 abstract class Card {
 
-    String name;
+    String name
     List<CardType> cardTypes
     List<CardSubType> cardSubTypes
     List<Ability> abilities
     Boolean hasSummoningSickness
     Map<Counter, Integer> counters
-    String owner
+    String owner //This will indicate the Deck to which the card belongs not the player itself (design decision)
     String controller
     Card exiledBy
     Integer cost = 0

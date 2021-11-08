@@ -3,6 +3,7 @@ package challengedeck.decks.basicdeck
 import challengedeck.CthulhuGame
 import challengedeck.Deck
 import challengedeck.cards.Mountain
+import challengedeck.decks.cthulhudeck.CthulhuDeck
 import challengedeck.decks.cthulhudeck.MysticCaller
 import challengedeck.decks.cthulhudeck.WanderingReckoner
 import junit.framework.TestCase
@@ -12,11 +13,23 @@ import junit.framework.TestCase
  */
 class WarriorDeckSpec extends TestCase {
 
+    Deck getCthulhuDeck(){
+        Deck cthulhuDeck = new CthulhuDeck()
+        cthulhuDeck.clear()
+        return cthulhuDeck
+    }
+
+    Deck getWarriorDeck(){
+        Deck warriorDeck = new WarriorDeck()
+        warriorDeck.clear()
+        return warriorDeck
+    }
+
     void testBasicDeck() {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeck = new Deck()
+        Deck newDeck = getCthulhuDeck()
         newDeck.addMany(1, MysticCaller.class)
         newDeck.addMany(1, WanderingReckoner.class)
 
@@ -30,7 +43,7 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeck = new Deck();
+        Deck newDeck = getWarriorDeck()
         newDeck.addMany(2, Mountain.class)
         newDeck.addMany(5, RedWarrior.class)
 
@@ -47,10 +60,10 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeckCthulhu = new Deck();
+        Deck newDeckCthulhu = getCthulhuDeck()
         newDeckCthulhu.addMany(10, WanderingReckoner.class)
 
-        Deck newDeck = new Deck();
+        Deck newDeck = getWarriorDeck()
         newDeck.addMany(2, Mountain.class)
         newDeck.addMany(5, RedWarrior.class)
 
@@ -68,10 +81,10 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeckCthulhu = new Deck();
+        Deck newDeckCthulhu = getCthulhuDeck()
         newDeckCthulhu.addMany(10, WanderingReckoner.class)
 
-        Deck newDeck = new Deck();
+        Deck newDeck = getWarriorDeck()
         newDeck.addMany(2, Mountain.class)
         newDeck.addMany(5, RedWarrior.class)
 
@@ -89,10 +102,10 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeckCthulhu = new Deck();
+        Deck newDeckCthulhu = getCthulhuDeck()
         newDeckCthulhu.addMany(10, WanderingReckoner.class)
 
-        Deck newDeck = new Deck();
+        Deck newDeck = getWarriorDeck()
         newDeck.addMany(3, Mountain.class)
         newDeck.addMany(4, RedWarrior.class)
         newDeck.addMany(3, RedWarrior.class)
@@ -109,16 +122,16 @@ class WarriorDeckSpec extends TestCase {
 
         CthulhuGame game = new CthulhuGame()
 
-        Deck newDeckCthulhu = new Deck();
+        Deck newDeckCthulhu = getCthulhuDeck()
         newDeckCthulhu.addMany(10, WanderingReckoner.class)
 
-        Deck newDeck = new Deck();
-        newDeck.addMany(4, Mountain.class)
-        newDeck.addMany(3, RedWarrior.class)
+        Deck playerDeck = getWarriorDeck()
+        playerDeck.addMany(4, Mountain.class)
+        playerDeck.addMany(3, RedWarrior.class)
 
-        newDeck.addMany(10, RedWarrior.class)
+        playerDeck.addMany(10, RedWarrior.class) //Added more cards to avoid losing by empty library
 
-        game.player.deck = newDeck
+        game.player.deck = playerDeck
         game.cthulhuDeck = newDeckCthulhu
         game.start(4)
 
