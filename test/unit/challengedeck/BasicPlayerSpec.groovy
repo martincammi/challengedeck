@@ -1,7 +1,7 @@
 package challengedeck
 
+import challengedeck.players.BasicPlayer
 import grails.test.mixin.TestFor
-import junit.framework.TestCase
 import spock.lang.Specification
 
 /**

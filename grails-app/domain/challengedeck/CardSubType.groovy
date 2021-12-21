@@ -14,6 +14,11 @@ enum CardSubType {
     CULTIST,
     SHAMAN,
     WARRIOR,
-    BASIC,
-    SHAPESHIFTER
+    BASIC, //Deprecated this should be a supertype
+    SHAPESHIFTER,
+    PLAINS,
+    MOUNTAIN,
+    SWAMP,
+    ISLAND,
+    FOREST
 }

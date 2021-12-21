@@ -10,6 +10,7 @@ import challengedeck.exceptions.CantLeaveBattlefieldException
 import challengedeck.exceptions.CthuluLostGameException
 import challengedeck.exceptions.NoCardsInLibraryException
 import challengedeck.exceptions.PlayerLostGameException
+import challengedeck.players.BasicPlayer
 
 class CthulhuGame {
 

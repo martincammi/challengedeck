@@ -14,7 +14,7 @@ class Deck {
 
     void shuffle(){
         Collections.shuffle(cards)
-        this.cards = cards
+        this.cards = cards //Is this really necessary?
     }
 
     void clear(){
@@ -33,6 +33,10 @@ class Deck {
 
     def add(Card card){
         cards.add(card)
+    }
+
+    def add(List<Card> cards){
+        this.cards.addAll(cards)
     }
 
     def addMany(Integer many, Class cardClass){

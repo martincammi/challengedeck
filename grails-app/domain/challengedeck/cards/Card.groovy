@@ -1,6 +1,7 @@
 package challengedeck.cards
 
 import challengedeck.CardSubType
+import challengedeck.CardSuperType
 import challengedeck.CardType
 import challengedeck.CthulhuGame
 import challengedeck.abilities.Ability
@@ -9,6 +10,7 @@ abstract class Card {
 
     String name
     List<CardType> cardTypes
+    List<CardSuperType> cardSuperTypes
     List<CardSubType> cardSubTypes
     List<Ability> abilities
     Boolean hasSummoningSickness
@@ -16,7 +18,9 @@ abstract class Card {
     String owner //This will indicate the Deck to which the card belongs not the player itself (design decision)
     String controller
     Card exiledBy
-    Integer cost = 0
+    Integer cost = 0 //mana value
+    String manaCost
+    Boolean tapped
 
     Card(){
         this.hasSummoningSickness = true
@@ -87,5 +91,13 @@ abstract class Card {
 
     void removeAllCounters(Counter counter){
         setCounter(counter, 0)
+    }
+
+    void tap(){
+        this.tapped = true
+    }
+
+    void untap(){
+        this.tapped = false
     }
 }
