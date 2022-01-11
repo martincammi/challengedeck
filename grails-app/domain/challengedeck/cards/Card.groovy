@@ -19,7 +19,7 @@ abstract class Card {
     String controller
     Card exiledBy
     Integer cost = 0 //mana value
-    String manaCost
+    String manaCost = ""
     Boolean tapped
 
     Card(){

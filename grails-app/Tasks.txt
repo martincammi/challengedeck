@@ -3,8 +3,6 @@ HOW TO COMMIT
 Commit via IDEA normally.
 Go to the project directory and execute ./pushCode.sh
 
-Git token: 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
-
 Problemas
 ----------------------------------
 Beginning of each upkeep

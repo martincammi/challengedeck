@@ -8,6 +8,7 @@ import challengedeck.cards.Strategy
 import challengedeck.players.DeckPlayer
 import challengedeck.state.phases.BeginningPhase
 import challengedeck.state.phases.StepState
+import challengedeck.state.steps.InitialStep
 import challengedeck.strategies.AlwaysAttackCreaturesStrategy
 import grails.util.Pair
 
@@ -15,6 +16,8 @@ class DualGame {
 
     public static int DEFAULT_INITIAL_LIFE = 20
     public static int DEFAULT_INITIAL_CARDS = 7
+    public static int NO_TURNS = -1
+
     Player player1
     Player player2
     private int playerLife1
@@ -28,6 +31,9 @@ class DualGame {
     private Map<Trigger, Ability> stepsListeners = new HashMap<Trigger, Ability>()
     StepState stepState
     Stack<Card> stack = new Stack<Card>()
+    int turnCount = 0
+    Boolean player1LandDrop = false
+    Boolean player2LandDrop = false
 
     static void main(String[] args){
         println "Beginning Dual Game"
@@ -60,22 +66,72 @@ class DualGame {
 
     void start(def turns = 20){
 
-        int turnCount = 0
-        Boolean turnSafeCondition = true
+        Boolean turnSafeCondition = (turnCount <= turns)
         activePlayer = player1
         nonActivePlayer = player2
+        stepState = InitialStep.getInstance()
 
         eachPlayerDrawsCards()
         takeMulligans()
-
+        println ""
+        println "--- " + activePlayer.name + " (active player) --- "
         while(!winner && turnSafeCondition){
 
+            println "Turn Count: " + turnCount
             //Begin Turn
-            setStepState(BeginningPhase.getInstance().getStepState())
-            playersGetPriority()
+                //Untap step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Upkeep step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Draw step
+                stepState.next(this)
+                playersGetPriority()
+                drawCard(activePlayer)
+
+                //Main phase 1 step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Beginning Combat step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Declare Attackers step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Declare Blockers step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Assign Combat Damage step
+                stepState.next(this)
+                playersGetPriority()
+
+                //End of Combat step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Main phase 2 step
+                stepState.next(this)
+                playersGetPriority()
+
+                //End step
+                stepState.next(this)
+                playersGetPriority()
+
+                //Cleanup step
+                stepState.next(this)
+                playersGetPriority()
 
             //End turn
             changeActivePlayer()
+            println ""
+            println "--- " + activePlayer.name + " (active player) --- "
 
             //Update safe condition
             turnSafeCondition = (turnCount <= turns)
@@ -105,7 +161,7 @@ class DualGame {
 
 
     List<Card> getCardsFromPlayer(Player player, CardType cardType){
-        return battlefield.collect { it.owner.equals(player) && it.cardTypes.contains(cardType) }
+        return battlefield.findAll { it.owner.equals(player) && it.cardTypes.contains(cardType) }
     }
 
     void setStepState(StepState stepState){
@@ -133,39 +189,71 @@ class DualGame {
         Pair playInfo1
         Pair playInfo2
         Boolean anythingToPlay = true
-
+        int counter = 0
         //Pending check play land scenario
 
         while(anythingToPlay){
 
-            anythingToPlay = false
             while((playInfo1 = activePlayer.wantToPlaySpell(this)) != null){
-                playCard(playInfo1.aValue)
+                playCard(playInfo1.aValue, activePlayer)
                 tapCards(playInfo1.bValue)
-                anythingToPlay = true
             }
 
             while((playInfo2 = nonActivePlayer.wantToPlaySpell(this)) != null){
-                playCard(playInfo2.aValue)
+                playCard(playInfo2.aValue, nonActivePlayer)
                 tapCards(playInfo2.bValue)
-                anythingToPlay = true
             }
 
+            anythingToPlay = playInfo2 != null
+
+            counter++
+            infiniteCheck(counter)
         }
 
     }
 
-    void playCard(Card card){
+    void infiniteCheck(int a){
+        if(a == 100){
+            println " --- INFINITE LOOP DETECTED ---"
+        }
+    }
+
+    /**
+     * Put a Land onto the battlefield or cast a spell
+     * @param card
+     */
+    void playCard(Card card, Player player){
         if(card instanceof Land){
             battlefield.add(card)
+            playerDropLand()
+            println "\t" + player.name + " played a " + card.name + " (" + player.hand.size() + " cards in hand)"
         }else{
             stack.push(card)
+            println "\t" + player.name + " cast a " + card.name + " (" + player.hand.size() + " cards in hand)"
         }
+        player.getHand().remove(card)
     }
 
     void tapCards(List<Card> cardsToTap){
         cardsToTap.each { cardToTap ->
             cardToTap.tap()
+        }
+    }
+
+    Boolean hasDropLand(){
+        if(activePlayer.equals(player1)){
+            return player1LandDrop
+        }else{
+            return player2LandDrop
+        }
+    }
+
+    void playerDropLand(){
+
+        if(activePlayer.equals(player1)){
+            player1LandDrop = true
+        }else{
+            player2LandDrop = true
         }
     }
 
@@ -176,9 +264,11 @@ class DualGame {
         if(activePlayer.equals(player1)){
             activePlayer = player2
             nonActivePlayer = player1
+            player2LandDrop = false
         }else{
             activePlayer = player1
             nonActivePlayer = player2
+            player1LandDrop = false
         }
     }
 
@@ -190,17 +280,34 @@ class DualGame {
     void takeMulligans(){
         boolean needMulligan1 = needMulligan(player1)
         boolean needMulligan2 = needMulligan(player2)
+        boolean stopMulligan1 = false
+        boolean stopMulligan2 = false
 
-        while(needMulligan1 || needMulligan1){
+        while(needMulligan1 || needMulligan2){
             if(needMulligan1){
+                println ""
+                println "--- " + player1.getName() + " takes mulligan of " + (player1.hand.size() - 1) + " cards ---"
                 mulligan(player1, player1.hand.size() - 1)
             }
             if(needMulligan2){
+                println ""
+                println "--- " + player2.getName() + " takes mulligan of " + (player2.hand.size() - 1) + " cards ---"
                 mulligan(player2, player2.hand.size() - 1)
             }
 
             needMulligan1 = needMulligan(player1)
+            if(!stopMulligan1 && !needMulligan1){
+                println ""
+                println "--- " + player1.name + " stays with " + player1.hand.size() + " cards ---"
+                stopMulligan1 = true
+            }
+
             needMulligan2 = needMulligan(player2)
+            if(!stopMulligan2 && !needMulligan2){
+                println ""
+                println "--- " + player2.name + " stays with " + player2.hand.size() + " cards ---"
+                stopMulligan2 = true
+            }
         }
     }
 
@@ -211,16 +318,17 @@ class DualGame {
     void mulligan(Player player, int cardsToDraw){
         player.deck.add(player.hand)
         player.hand.clear()
+        println ""
         println "--- " + player.getName() + " draws " + cardsToDraw + " cards ---"
         for (int i = 1; i <= cardsToDraw; i++) {
             Card card = drawCard(player)
-            println "(" + player.deck.name +  " draw card " + card.name + ")"
         }
     }
 
     Card drawCard(Player player){
         Card card = player.deck.draw()
         player.hand.add(card)
+        println "\t" + player.name + " draws a card " + card.name + " (" + player.hand.size() + " cards in hand)"
         return card
     }
 

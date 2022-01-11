@@ -6,10 +6,8 @@ import challengedeck.state.steps.beginning.UntapStep
 class BeginningPhase implements PhaseState {
 
     static BeginningPhase instance
-    StepState stepState
 
     private BeginningPhase(){
-        stepState = UntapStep.getInstance(this)
     }
 
     static PhaseState getInstance(){
@@ -20,6 +18,5 @@ class BeginningPhase implements PhaseState {
     }
 
     void next(DualGame dualGame) {
-        dualGame.setPhaseState(Main1Phase.getInstance())
     }
 }

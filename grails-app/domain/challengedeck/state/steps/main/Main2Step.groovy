@@ -6,32 +6,32 @@ import challengedeck.Trigger
 import challengedeck.state.phases.Main1Phase
 import challengedeck.state.phases.PhaseState
 import challengedeck.state.phases.StepState
-import challengedeck.state.steps.combat.BeginningCombatStep
+import challengedeck.state.steps.ending.EndStep
 
-class Main1Step implements StepState {
+class Main2Step implements StepState {
 
-    static Main1Step instance
+    static Main2Step instance
     PhaseState phaseState
 
-    private Main1Step(){
+    private Main2Step(){
         phaseState = Main1Phase.getInstance()
     }
 
     static StepState getInstance(){
         if(instance == null){
-            instance = new Main1Step()
+            instance = new Main2Step()
         }
         return instance
     }
 
     void next(DualGame dualGame) {
-        dualGame.setStepState(BeginningCombatStep.getInstance())
-        println "- " + BeginningCombatStep.class.getSimpleName()
+        dualGame.setStepState(EndStep.getInstance())
+        println "- " + EndStep.class.getSimpleName()
     }
 
     @Override
     List<Trigger> getTriggers() {
-        return [Trigger.BEGINNING_MAIN_PHASE_1]
+        return [Trigger.BEGINNING_MAIN_PHASE_2]
     }
 
     List<CardType> castableTypes(){

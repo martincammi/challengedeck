@@ -16,5 +16,10 @@ interface Player {
 
     Boolean needMulligan();
 
+    /**
+     * The player has intention to play a land or to cast an spell
+     * @param dualGame
+     * @return
+     */
     Pair<Card, List<Card>> wantToPlaySpell(DualGame dualGame);
 }

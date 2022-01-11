@@ -6,6 +6,7 @@ import challengedeck.Trigger
 import challengedeck.state.phases.BeginningPhase
 import challengedeck.state.phases.PhaseState
 import challengedeck.state.phases.StepState
+import challengedeck.state.steps.main.Main1Step
 
 class DrawStep implements StepState {
 
@@ -16,16 +17,16 @@ class DrawStep implements StepState {
         phaseState = BeginningPhase.getInstance()
     }
 
-    static StepState getInstance(PhaseState phaseState){
+    static StepState getInstance(){
         if(instance == null){
             instance = new DrawStep()
-            instance.phaseState = phaseState
         }
         return instance
     }
 
     void next(DualGame dualGame) {
-        dualGame.setStepState(DrawStep.getInstance())
+        dualGame.setStepState(Main1Step.getInstance())
+        println "- " + Main1Step.class.getSimpleName()
     }
 
     @Override

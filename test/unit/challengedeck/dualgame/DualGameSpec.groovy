@@ -38,8 +38,29 @@ class DualGameSpec extends TestCase {
         deck2.addMany(60, WanderingReckoner.class)
         game.player2.deck = deck2
 
-        game.start()
+        game.start(game.NO_TURNS)
         assertEquals(MulliganStrategy.MIN_CARDS_STOP_MULLIGAN,game.player1.hand.size())
+        assertEquals(MulliganStrategy.MIN_CARDS_STOP_MULLIGAN,game.player2.hand.size())
+    }
+
+    void testMulliganSomeLands() {
+
+        DualGame game = DualGame.getInstance()
+
+        Deck deck1 = new Deck()
+        deck1.addMany(5, WanderingReckoner.class)
+        deck1.addMany(2, Mountain.class)
+        deck1.addMany(53, WanderingReckoner.class)
+        game.player1.deck = deck1
+
+        Deck deck2 = new Deck()
+        deck2.addMany(6, WanderingReckoner.class)
+        deck2.addMany(1, Mountain.class)
+        deck1.addMany(53, WanderingReckoner.class)
+        game.player2.deck = deck2
+
+        game.start(game.NO_TURNS)
+        assertEquals(7,game.player1.hand.size())
         assertEquals(MulliganStrategy.MIN_CARDS_STOP_MULLIGAN,game.player2.hand.size())
     }
 
@@ -55,12 +76,29 @@ class DualGameSpec extends TestCase {
 
         Deck deck2 = new Deck()
         deck2.addMany(37, WanderingReckoner.class)
-        deck2.addMany(23, WanderingReckoner.class)
+        deck2.addMany(23, Mountain.class)
         deck2.shuffle()
         game.player2.deck = deck2
 
         game.start()
-        assertEquals(false)
+        assertEquals(22, game.turnCount)
+    }
+
+    void testSevenOrLessCardsInHandEndOfTurn(){
+
+        DualGame game = DualGame.getInstance()
+
+        Deck deck1 = new Deck()
+        deck1.addMany(60, Mountain.class)
+        game.player1.deck = deck1
+
+        Deck deck2 = new Deck()
+        deck2.addMany(60, Mountain.class)
+        game.player2.deck = deck2
+
+        game.start()
+        assertEquals(DualGame.DEFAULT_INITIAL_CARDS,game.player1.hand.size())
+        assertEquals(DualGame.DEFAULT_INITIAL_CARDS,game.player2.hand.size())
     }
 
 

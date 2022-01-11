@@ -13,12 +13,12 @@ class UntapStep implements StepState {
     PhaseState phaseState
 
     private UntapStep(){
+        phaseState = BeginningPhase.getInstance()
     }
 
-    static StepState getInstance(PhaseState phaseState){
+    static StepState getInstance(){
         if(instance == null){
             instance = new UntapStep()
-            instance.phaseState = phaseState
         }
         return instance
     }
@@ -26,6 +26,7 @@ class UntapStep implements StepState {
 
     void next(DualGame dualGame) {
         dualGame.setStepState(UpkeepStep.getInstance())
+        println "- " + UpkeepStep.class.getSimpleName()
     }
 
     /**

@@ -6,6 +6,7 @@ import challengedeck.CthulhuGame
 import challengedeck.DualGame
 import challengedeck.cards.Card
 import challengedeck.cards.Creature
+import challengedeck.cards.Land
 import challengedeck.cards.Player
 import challengedeck.cards.Strategy
 import grails.util.Pair
@@ -34,26 +35,30 @@ class AlwaysAttackCreaturesStrategy implements Strategy {
      */
     Pair<Card, List<Card>> nextCardToPlay(DualGame dualGame, Player player) {
 
-        List<Card> cardsToPlay = player.getHand().findAll { !it.cardTypes.intersect(dualGame.stepState.castableTypes()).isEmpty() }
-        List<Card> cardsWithMinCost = cardsToPlay.min { it.cost }
+        List<Card> cardsToPlay = player.getHand().findAll { !it.cardTypes.intersect(dualGame.stepState.castableTypes()).isEmpty() && (!it instanceof Land || !dualGame.hasDropLand()) }
+        Integer minCost = cardsToPlay.min { it.cost }?.cost
+        List<Card> cardsWithMinCost = cardsToPlay.findAll { minCost.equals(it.cost) }
         Card cardToPlay = cardsWithMinCost.find { canBePlayed(it, dualGame, player) }
 
-        List<Card> landsToTap = landsToTap(cardToPlay, dualGame, player)
+        if(cardToPlay){
+            List<Card> landsToTap = landsToTap(cardToPlay, dualGame, player)
+            return new Pair(cardToPlay, landsToTap)
+        }
 
-        return new Pair(cardToPlay, landsToTap)
+        return null
     }
 
     private Boolean canBePlayed(Card card, DualGame dualGame, Player player){
 
         List<Card> landsToTap = dualGame.getCardsFromPlayer(player, CardType.LAND)
 
-        Boolean enoughPlains = card.getManaCost().count("W") <= landsToTap.collect{ it.cardSubTypes.contains(CardSubType.PLAINS)}
-        Boolean enoughMountains = card.getManaCost().count("R") <= landsToTap.collect{ it.cardSubTypes.contains(CardSubType.MOUNTAIN)}
-        Boolean enoughIslands = card.getManaCost().count("U") <= landsToTap.collect{ it.cardSubTypes.contains(CardSubType.ISLAND)}
-        Boolean enoughSwamps = card.getManaCost().count("B") <= landsToTap.collect{ it.cardSubTypes.contains(CardSubType.SWAMP)}
-        Boolean enoughForests = card.getManaCost().count("G") <= landsToTap.collect{ it.cardSubTypes.contains(CardSubType.FOREST)}
+        Boolean enoughPlains = card.getManaCost().count("W") <= landsToTap.count{ it.cardSubTypes.contains(CardSubType.PLAINS)}
+        Boolean enoughMountains = card.getManaCost().count("R") <= landsToTap.count{ it.cardSubTypes.contains(CardSubType.MOUNTAIN)}
+        Boolean enoughIslands = card.getManaCost().count("U") <= landsToTap.count{ it.cardSubTypes.contains(CardSubType.ISLAND)}
+        Boolean enoughSwamps = card.getManaCost().count("B") <= landsToTap.count{ it.cardSubTypes.contains(CardSubType.SWAMP)}
+        Boolean enoughForests = card.getManaCost().count("G") <= landsToTap.count{ it.cardSubTypes.contains(CardSubType.FOREST)}
 
-        Integer amountIndifferentColor = landsToTap.size() >= card.cost
+        Boolean amountIndifferentColor = landsToTap.size() >= card.cost
 
         return enoughPlains && enoughMountains && enoughIslands && enoughSwamps && enoughForests && amountIndifferentColor
     }

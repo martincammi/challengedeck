@@ -17,17 +17,17 @@ class UpkeepStep implements StepState {
         phaseState = BeginningPhase.getInstance()
     }
 
-    static StepState getInstance(PhaseState phaseState){
+    static StepState getInstance(){
         if(instance == null){
             instance = new UpkeepStep()
-            instance.phaseState = phaseState
         }
         return instance
     }
 
 
     void next(DualGame dualGame) {
-        dualGame.setStepState(Main1Step.getInstance())
+        dualGame.setStepState(DrawStep.getInstance())
+        println "- " + DrawStep.class.getSimpleName()
     }
 
     /**

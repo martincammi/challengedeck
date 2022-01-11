@@ -5,7 +5,6 @@ import challengedeck.DualGame
 class Main1Phase implements PhaseState {
 
     static Main1Phase instance
-    StepState stepState
 
     private Main1Phase(){}
 
@@ -17,6 +16,5 @@ class Main1Phase implements PhaseState {
     }
 
     void next(DualGame dualGame) {
-        dualGame.setPhaseState(CombatPhase.getInstance())
     }
 }

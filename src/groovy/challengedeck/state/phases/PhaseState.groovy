@@ -6,6 +6,4 @@ interface PhaseState {
 
     void next(DualGame dualGame)
 
-    StepState getStepState()
-
 }
